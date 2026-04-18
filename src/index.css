@@ -1,0 +1,58 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  :root {
+    --color-primary-500: #3b82f6;
+    --color-chat-background: #0c1222;
+    --color-chat-header: #1e293b;
+    --color-chat-sidebar: #0f172a;
+    --color-chat-input: #1e293b;
+  }
+
+  body {
+    @apply bg-gray-900 text-white font-sans antialiased;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+
+  #root {
+    @apply w-full h-full max-w-full mx-auto overflow-hidden;
+  }
+
+  ::selection {
+    @apply bg-blue-600 text-white;
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-gray-800;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gray-600 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-500;
+  }
+}
+
+@layer components {
+  /* Animaciones y transiciones globales */
+  .scroll-smooth {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer utilities {
+  /* Utilidades custom para la app de chat */
+}

@@ -1,0 +1,382 @@
+/* ==========================================================================
+   App.css — Custom styles for Chat Web App
+   ==========================================================================
+   Custom CSS that extends beyond TailwindCSS utilities.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Custom scrollbars for the chat area
+   -------------------------------------------------------------------------- */
+
+/* Messages container scroll — thin, dark themed */
+.msg-list-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+
+.msg-list-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.msg-list-scroll::-webkit-scrollbar-thumb {
+  background: rgba(100, 116, 139, 0.5);
+  border-radius: 4px;
+}
+
+.msg-list-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 116, 139, 0.8);
+}
+
+/* Sidebar channel list scroll — thin, matches chat scrollbar */
+.sidebar-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+
+.sidebar-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar-scroll::-webkit-scrollbar-thumb {
+  background: rgba(100, 116, 139, 0.4);
+  border-radius: 4px;
+}
+
+.sidebar-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 116, 139, 0.7);
+}
+
+/* --------------------------------------------------------------------------
+   2. Sidebar slide-in animation (mobile)
+   -------------------------------------------------------------------------- */
+
+@keyframes slideFromLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideToLeft {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+}
+
+.sidebar-enter {
+  animation: slideFromLeft 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.sidebar-exit {
+  animation: slideToLeft 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Overlay for mobile sidebar backdrop */
+.sidebar-backdrop {
+  animation: fadeIn 0.3s ease-in-out forwards;
+}
+
+/* --------------------------------------------------------------------------
+   3. App mount fade-in animation
+   -------------------------------------------------------------------------- */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Staggered children fade-in for messages and channel list */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.app-mounted {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+.msg-enter {
+  animation: fadeInUp 0.25s ease-out forwards;
+}
+
+.sidebar-item-enter {
+  animation: fadeInUp 0.2s ease-out forwards;
+}
+
+/* --------------------------------------------------------------------------
+   4. Message max-width and line-clamp utilities
+   -------------------------------------------------------------------------- */
+
+.msg-max-width-sm {
+  max-width: 65%;
+}
+
+.msg-max-width-md {
+  max-width: 75%;
+}
+
+.msg-max-width-lg {
+  max-width: 85%;
+}
+
+.msg-line-clamp-1 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+}
+
+.msg-line-clamp-2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.msg-line-clamp-3 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+/* --------------------------------------------------------------------------
+   5. Hover transitions for chat-related elements
+   -------------------------------------------------------------------------- */
+
+/* Channel list item hover */
+.channel-item-hover {
+  position: relative;
+  transition: background-color 0.15s ease-in-out;
+}
+
+.channel-item-hover::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(59, 130, 246, 0.08) 0%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+  pointer-events: none;
+  border-radius: 0.375rem;
+}
+
+.channel-item-hover:hover::after {
+  opacity: 1;
+}
+
+/* Message bubble subtle hover lift */
+.msg-bubble-hover {
+  transition: transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.msg-bubble-hover:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Avatar hover scale */
+.avatar-hover {
+  transition: transform 0.2s ease-in-out;
+}
+
+.avatar-hover:hover {
+  transform: scale(1.08);
+}
+
+/* Chat input focus glow */
+.chat-input-glow:focus {
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.3), 0 0 12px rgba(16, 185, 129, 0.1);
+}
+
+/* Typing indicator pulse dots */
+.typing-dot {
+  animation: typingBounce 1.4s infinite ease-in-out both;
+}
+
+.typing-dot:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.typing-dot:nth-child(2) {
+  animation-delay: 0.16s;
+}
+
+.typing-dot:nth-child(3) {
+  animation-delay: 0.32s;
+}
+
+@keyframes typingBounce {
+  0%, 80%, 100% {
+    transform: scale(0.6);
+    opacity: 0.4;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   6. Dark theme scrollbar and overflow refinements
+   -------------------------------------------------------------------------- */
+
+/* Firefox scrollbar styling */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(100, 116, 139, 0.4) transparent;
+}
+
+/* Prevent horizontal overflow on all containers */
+.no-horizontal-scroll {
+  overflow-x: hidden;
+}
+
+/* Smooth scrolling for all scrollable areas */
+.scroll-smooth-chat {
+  scroll-behavior: smooth;
+}
+
+/* Prevent text selection on UI chrome only */
+.select-none-chrome {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* --------------------------------------------------------------------------
+   7. Chat-specific visual refinements
+   -------------------------------------------------------------------------- */
+
+/* Date separator with blur backdrop */
+.date-separator {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* Unread badge pulse */
+@keyframes badgePulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+}
+
+.unread-badge {
+  animation: badgePulse 2s ease-in-out infinite;
+}
+
+/* Gradient fade on scrollable containers at edges */
+.scroll-fade-top::before {
+  content: '';
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 30px;
+  background: linear-gradient(
+    to bottom,
+    var(--color-chat-background, #0c1222),
+    transparent
+  );
+  pointer-events: none;
+  z-index: 2;
+}
+
+.scroll-fade-bottom::after {
+  content: '';
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 30px;
+  background: linear-gradient(
+    to top,
+    var(--color-chat-background, #0c1222),
+    transparent
+  );
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Focus-visible ring for accessibility */
+.focus-ring {
+  outline: none;
+}
+
+.focus-ring:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Message sent confirm animation */
+@keyframes sentConfirm {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.sent-confirm {
+  animation: sentConfirm 0.3s ease-out forwards;
+}
+
+/* Empty state floating animation */
+@keyframes floatGently {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.empty-state-float {
+  animation: floatGently 4s ease-in-out infinite;
+}
+
+/* New message slide-in (arrival at bottom) */
+@keyframes msgSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.msg-new-arrival {
+  animation: msgSlideIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
