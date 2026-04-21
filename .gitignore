@@ -43,3 +43,6 @@ yarn.lock
 # OS
 Thumbs.db
 .agents
+.env
+.agents
+skills-lock.json

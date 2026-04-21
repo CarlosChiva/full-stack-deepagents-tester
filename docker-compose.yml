@@ -17,7 +17,7 @@ services:
 
     # Load secrets into the container from the project's .env file.
     env_file:
-      - .env
+      - ./deep-agent-backend/.env
 
     # Healthcheck: verifies the FastAPI /health endpoint is responding.
     healthcheck:
@@ -32,15 +32,15 @@ services:
 
     # Anonymous volume for persistent state (e.g., MemorySaver).
     volumes:
-      - .:/app
+      - ./deep-agent-backend/.agents:/app/.agents
 
     # Descriptive labels for observability and potential Traefik routing.
     labels:
       - "traefik.enable=true"
       - "service=backend"
 
-  chat-app:
-    build: ./deepagent-frontend
-    container_name: deepagent-frontend
-    ports:
-      - "8082:80"
+  # chat-app:
+  #   build: ./deepagent-frontend
+  #   container_name: deepagent-frontend
+  #   ports:
+  #     - "8082:80"
