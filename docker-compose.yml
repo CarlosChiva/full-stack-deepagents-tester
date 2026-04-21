@@ -1,6 +1,46 @@
+# Docker Compose configuration for the FastAPI backend service
+# Version 3.8+ for production-ready orchestration with healthchecks
+
+version: "3.8"
+
 services:
+  backend:
+    # Built from the Dockerfile in the project root.
+    # Ensure a valid Dockerfile exists at the project root before running.
+    build: ./deep-agent-backend
+    container_name: deepagent-backend
+
+    # Expose the FastAPI server to the host on port 8000.
+    ports:
+      - "8003:8003"
+    network_mode: host
+
+    # Load secrets into the container from the project's .env file.
+    env_file:
+      - .env
+
+    # Healthcheck: verifies the FastAPI /health endpoint is responding.
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8003/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+    # Restart the container unless it is explicitly stopped by the operator.
+    restart: unless-stopped
+
+    # Anonymous volume for persistent state (e.g., MemorySaver).
+    volumes:
+      - .:/app
+
+    # Descriptive labels for observability and potential Traefik routing.
+    labels:
+      - "traefik.enable=true"
+      - "service=backend"
+
   chat-app:
-    build: .
-    container_name: chat-app
+    build: ./deepagent-frontend
+    container_name: deepagent-frontend
     ports:
       - "8082:80"
