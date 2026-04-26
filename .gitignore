@@ -46,3 +46,7 @@ Thumbs.db
 .env
 .agents
 skills-lock.json
+
+# docs files
+REQUIREMENTS.md
+PROJECT_STATE.md
