@@ -7,7 +7,7 @@ services:
   backend:
     # Built from the Dockerfile in the project root.
     # Ensure a valid Dockerfile exists at the project root before running.
-    build: ./deep-agent-backend
+    build: ./deepagent-backend
     container_name: deepagent-backend
 
     # Expose the FastAPI server to the host on port 8000.
@@ -17,7 +17,7 @@ services:
 
     # Load secrets into the container from the project's .env file.
     env_file:
-      - ./deep-agent-backend/.env
+      - ./deepagent-backend/.env
 
     # Healthcheck: verifies the FastAPI /health endpoint is responding.
     healthcheck:

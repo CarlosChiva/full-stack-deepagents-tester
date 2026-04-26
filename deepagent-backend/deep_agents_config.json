@@ -1,0 +1,38 @@
+{
+  "environment": {
+    "AGENT_MODEL": "ollama:qwen3.6-dense",
+    "OPENAI_API_KEY": "ollama",
+    "OPENAI_API_BASE_URL": "http://127.0.0.1:11434",
+    "MODEL_TEMPERATURE": "0.7",
+    "RECURSION_LIMIT": "10"
+  },
+  "deep_agents": [
+    {
+      "id": "general-assistant",
+      "name": "General Assistant",
+      "description": "Asistente general para tareas comunes",
+      "instructions": "Eres un asistente útil, creativo y conciso.",
+      "model": "ollama:qwen3.6-dense",
+      "tools": [],
+      "max_recursion": 10,
+      "internal_agents": [
+        {
+          "id": "code-analyzer",
+          "name": "Code Analyzer",
+          "description": "Analiza código fuente y detecta errores",
+          "instructions": "Eres un analizador de código especializado. Analiza el código para encontrar errores, sugerir mejoras y explicar el funcionamiento.",
+          "tools": [],
+          "model": "ollama:qwen3.6-dense"
+        },
+        {
+          "id": "math-helper",
+          "name": "Math Helper",
+          "description": "Resuelve cálculos matemáticos",
+          "instructions": "Eres un asistente de matemáticas. Resuelve cálculos paso a paso.",
+          "tools": [],
+          "model": "ollama:qwen3.6-dense"
+        }
+      ]
+    }
+  ]
+}
