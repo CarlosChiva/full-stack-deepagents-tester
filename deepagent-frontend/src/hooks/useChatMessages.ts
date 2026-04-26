@@ -1,6 +1,6 @@
 import { useRef, useCallback, useEffect, useMemo, useState } from 'react';
 import { useChatContext } from '@/context';
-import type { Message } from '@/types';
+import type { InternalMessage } from '@/types';
 
 /** Cantidad máxima de mensajes que se cargan por página histórica. */
 const PAGE_SIZE = 50;
@@ -15,7 +15,7 @@ interface UseChatMessagesReturn {
   /** Referencia al contenedor DOM de los mensajes. */
   messageContainerRef: React.RefObject<HTMLDivElement | null>;
   /** Lista de mensajes filtrados por canal, sliced según el offset de paginación. */
-  displayedMessages: Message[];
+  displayedMessages: InternalMessage[];
   /** Indica si se está cargando historia de mensajes. */
   isLoadingHistory: boolean;
   /** Indica si el scroll está cerca del fondo. Si es falso, se desactiva el auto-scroll. */
@@ -60,7 +60,7 @@ function useChatMessages(channelID?: string): UseChatMessagesReturn {
 
   // Filtrado de todos los mensajes del canal, ordenados por timestamp
   // useMemo para recalcular solo cuando cambien los mensajes o el canal activo
-  const allChannelMessages = useMemo<Message[]>(() => {
+  const allChannelMessages = useMemo<InternalMessage[]>(() => {
     if (!activeChannelId) {
       return [];
     }
@@ -83,7 +83,7 @@ function useChatMessages(channelID?: string): UseChatMessagesReturn {
   // Devuelve los mensajes entre offset y offset + PAGE_SIZE
   // Esto representa la ventana visible de mensajes: los más recientes visibles
   // más los desplazados por la paginación hacia arriba
-  const displayedMessages = useMemo<Message[]>(() => {
+  const displayedMessages = useMemo<InternalMessage[]>(() => {
     const base = offset;
     const sliced = allChannelMessages.slice(base, base + PAGE_SIZE);
 

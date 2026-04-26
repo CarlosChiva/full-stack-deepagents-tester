@@ -49,7 +49,7 @@ docker compose down         # stop
 docker compose down -v      # stop + remove volumes
 ```
 
-Backend listens on host port `8003`; frontend Nginx on `8082`.
+Backend listens on host port `8003`; frontend Vite preview on `8082`.
 
 ## Gotchas
 

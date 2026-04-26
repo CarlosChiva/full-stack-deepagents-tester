@@ -30,6 +30,9 @@ services:
     # Restart the container unless it is explicitly stopped by the operator.
     restart: unless-stopped
 
+    # Memory limit to prevent OOM kills on hosts with other GPU/RAM-heavy services.
+    mem_limit: 2g
+
     # Anonymous volume for persistent state (e.g., MemorySaver).
     volumes:
       - ./deep-agent-backend/.agents:/app/.agents
@@ -39,8 +42,27 @@ services:
       - "traefik.enable=true"
       - "service=backend"
 
-  # chat-app:
-  #   build: ./deepagent-frontend
-  #   container_name: deepagent-frontend
-  #   ports:
-  #     - "8082:80"
+  chat-app:
+    build:
+      context: ./deepagent-frontend
+      args:
+        VITE_API_BASE_URL: http://localhost:8003
+    container_name: deepagent-frontend
+
+    ports:
+      - "8082:8082"
+    network_mode: host
+
+    # Wait until the backend /health endpoint responds before starting.
+    depends_on:
+      backend:
+        condition: service_healthy
+
+    # Memory limit to prevent OOM kills on hosts with other GPU/RAM-heavy services.
+    mem_limit: 1g
+
+    restart: unless-stopped
+
+    labels:
+      - "traefik.enable=true"
+      - "service=frontend"

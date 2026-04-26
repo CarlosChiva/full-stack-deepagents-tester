@@ -1,0 +1,34 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Environment files (secrets)
+.env
+.env.*
+!.env.example
+
+# Version control
+.git/
+.gitignore
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+
+# Vite cache
+.vite/
+
+# Test coverage
+coverage/
+
+# IDE and editor
+.idea/
+.vscode/
+
+# OS artifacts
+.DS_Store
+Thumbs.db

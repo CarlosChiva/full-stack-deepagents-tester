@@ -14,7 +14,7 @@ interface MainLayoutProps {
 }
 
 function MainLayout({ defaultChannel }: MainLayoutProps) {
-  const { channels, activeChannel, setActiveChannel } = useChatContext();
+  const { channels, activeChannel, setActiveChannel, addChannel } = useChatContext();
   const sidebarChannel = defaultChannel ?? activeChannel;
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -24,8 +24,8 @@ function MainLayout({ defaultChannel }: MainLayoutProps) {
     setIsSidebarOpen(false);
   };
 
-  const handleAddChannel = () => {
-    // Placeholder — creación futura de canales (crear un canal directo o grupo)
+  const handleAddChannel = async () => {
+    await addChannel();
   };
 
   return (

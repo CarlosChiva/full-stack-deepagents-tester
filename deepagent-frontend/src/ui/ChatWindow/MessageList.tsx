@@ -1,19 +1,52 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import useChatMessages from '@/hooks/useChatMessages';
 import MessageBubble from './MessageBubble';
-import type { Message } from '@/types';
+import StreamingPlaceholder from './StreamingPlaceholder';
+import type { InternalMessage } from '@/types';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale/es';
 
 const DATE_FORMAT = 'dd MMMM yyyy';
 
-interface MessageListProps {
-  channelID: string;
-  currentUserId: string;
+/** A consecutive block is either one user message or a run of agent messages (text + tool calls). */
+interface MessageBlock {
+  type: 'user' | 'agent';
+  messages: InternalMessage[];
 }
 
-function groupMessagesByDate(messages: Message[]) {
-  const groups: { dateLabel: string; messages: Message[] }[] = [];
+/** Determine whether a message belongs to an agent block. */
+function isAgentBlock(msg: InternalMessage): boolean {
+  return msg.sender === 'agent' || msg.kind === 'tool_call';
+}
+
+/**
+ * Partition a flat message list into consecutive-block groups.
+ * Consecutive agent messages (including tool-call indicators) are collapsed
+ * into a single block so the renderer can wrap them in a shared visual container.
+ */
+function groupIntoConsecutiveBlocks(messages: InternalMessage[]): MessageBlock[] {
+  const blocks: MessageBlock[] = [];
+
+  for (const msg of messages) {
+    const type = isAgentBlock(msg) ? 'agent' : 'user';
+    const last = blocks[blocks.length - 1];
+
+    if (last && last.type === type) {
+      last.messages.push(msg);
+    } else {
+      blocks.push({ type, messages: [msg] });
+    }
+  }
+
+  return blocks;
+}
+
+interface MessageListProps {
+  channelID: string;
+}
+
+function groupMessagesByDate(messages: InternalMessage[]) {
+  const groups: { dateLabel: string; messages: InternalMessage[] }[] = [];
 
   for (let i = 0; i < messages.length; i++) {
     const message = messages[i]!;
@@ -39,7 +72,7 @@ function formatMessageDate(dateLabel: string): string {
   return dateLabel;
 }
 
-function MessageList({ channelID, currentUserId }: MessageListProps) {
+function MessageList({ channelID }: MessageListProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const { displayedMessages, isLoadingHistory, scrollToBottom } = useChatMessages(channelID);
@@ -113,14 +146,47 @@ function MessageList({ channelID, currentUserId }: MessageListProps) {
               </div>
             </div>
 
-            {group.messages.map((message) => (
-              <div key={message.id}>
-                <MessageBubble
-                  message={message}
-                  isOwn={message.sender_id === currentUserId}
-                />
-              </div>
-            ))}
+            {groupIntoConsecutiveBlocks(group.messages).map((block) =>
+              block.type === 'user' ? (
+                block.messages.map((message) => (
+                  <div key={message.id}>
+                    <MessageBubble
+                      message={message}
+                      isOwn={true}
+                    />
+                  </div>
+                ))
+              ) : (
+                <div
+                  key={block.messages.map((m) => m.id).join('-')}
+                  className="flex gap-2 mt-3 justify-start"
+                >
+                  <div className="flex flex-col items-start gap-1 max-w-[80%]">
+                    {/* Only show avatar once per consecutive agent block */}
+                    <MessageBubble
+                      message={block.messages[0]!}
+                      isOwn={false}
+                      showAvatar={true}
+                    />
+                    {block.messages.slice(1).map((message) => (
+                      <MessageBubble
+                        key={message.id}
+                        message={message}
+                        isOwn={false}
+                        showAvatar={false}
+                      />
+                    ))}
+                    {/* Streaming placeholder when the last agent message is still streaming */}
+                    {block.messages[block.messages.length - 1]?.isStreaming &&
+                      block.messages.every(
+                        (m) => m.kind === 'tool_call' || m.content.length === 0,
+                      ) && (
+                        <StreamingPlaceholder />
+                      )}
+                  </div>
+                </div>
+              ),
+            )}
           </div>
         ))
       )}

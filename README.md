@@ -27,7 +27,7 @@ Una aplicación web de chat en tiempo real con interfaz de **barra lateral + ven
 | **TailwindCSS**| 3.4.x    | Framework CSS utilitario            |
 | **PostCSS**    | —        | Procesamiento de estilos            |
 | **Docker**     | latest   | Contenedores para desarrollo/prod   |
-| **Nginx**      | alpine   | Servidor estático en producción     |
+| **Node.js**    | 20.x     | Vite preview server en producción   |
 
 ---
 
@@ -187,12 +187,12 @@ docker compose down -v
 |------------------|----------------|
 | Servicio         | `chat-app`     |
 | Puerto expuesto  | `8080:80`      |
-| Imagen base      | `node:20-alpine` (builder) → `nginx:alpine` (prod) |
+| Imagen base      | `node:20-alpine` (builder) → `node:20-alpine` (prod, vite preview) |
 
 El `Dockerfile` utiliza **multi-stage build**:
 
 1. **Stage 1** (`builder`): `node:20-alpine` — instala dependencias y corre `npm run build`
-2. **Stage 2** (`runtime`): `nginx:alpine` — sirve los archivos estáticos generados
+2. **Stage 2** (`runtime`): `node:20-alpine` — ejecuta `vite preview --host 0.0.0.0 --port 8082`
 
 ---
 

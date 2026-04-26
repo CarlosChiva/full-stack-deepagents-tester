@@ -1,19 +1,30 @@
-import { useState, useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { useChatContext } from '@/context';
 import MessageList from '@/ui/ChatWindow/MessageList';
 import ChatInput from '@/ui/ChatWindow/ChatInput';
 import Avatar from '@/ui/Avatar';
 
 /** Componente principal de la ventana de chat. Integra MessageList y ChatInput
- *  dentro de un layout vertical con header y estados de empty. */
+ *  dentro de un layout vertical con header y estados de empty.
+ *  Lee isStreaming desde ChatContext para renderizar el indicador del agente. */
 function ChatWindow() {
-  const { activeChannel, currentUser, sendMessage } = useChatContext();
+  const {
+    activeChannel,
+    currentUser,
+    sendMessage,
+    isStreaming,
+    token,
+    channelsList,
+    isLoadingChannels,
+    addChannel,
+  } = useChatContext();
 
-  /* ── Ref para el timeout de debounce de "escribiendo…" ── */
-  const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  /* ── Estado local: indicador de "escribiendo…" ── */
-  const [isTyping, setIsTyping] = useState(false);
+  /* ── Auto-crear canal si no existe ninguno ── */
+  useEffect(() => {
+    if (token && !isLoadingChannels && channelsList.length === 0) {
+      addChannel();
+    }
+  }, [token, isLoadingChannels, channelsList, addChannel]);
 
 
 
@@ -40,36 +51,20 @@ function ChatWindow() {
       currentUser.id,
       currentUser.name
     );
-
-    /* Resetear debounce */
-    if (typingTimeoutRef.current) {
-      clearTimeout(typingTimeoutRef.current);
-      setIsTyping(false);
-    }
   };
 
-  /* ── Handler "escribiendo" con debounce (usa useRef para clearTimeout) ── */
-  const _handleTyping = (): void => {
-    setIsTyping(true);
-    if (typingTimeoutRef.current) {
-      clearTimeout(typingTimeoutRef.current);
-    }
-    typingTimeoutRef.current = setTimeout(() => {
-      setIsTyping(false);
-    }, 2000);
-  };
-  void _handleTyping;
+  /* ─── Estado vacío: sin canal seleccionado o cargando canales ─── */
+  if (isLoadingChannels || (!activeChannel && channelsList.length === 0)) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full bg-slate-900 text-slate-400 select-none">
+        <Avatar name="" size="lg" className="mb-6 opacity-40" />
+        <p className="text-lg font-medium text-slate-300">
+          Cargando conversaciones…
+        </p>
+      </div>
+    );
+  }
 
-  /* ── Limpiar timeout al desmontar para evitar fugas ── */
-  useEffect(() => {
-    return () => {
-      if (typingTimeoutRef.current) {
-        clearTimeout(typingTimeoutRef.current);
-      }
-    };
-  }, []);
-
-  /* ─── Estado vacío: sin canal seleccionado ─── */
   if (!activeChannel) {
     return (
       <div className="flex flex-col items-center justify-center h-full bg-slate-900 text-slate-400 select-none">
@@ -116,21 +111,22 @@ function ChatWindow() {
       </header>
 
       {/* Lista de mensajes — MessageList maneja su propio scroll y estado interno */}
-      <MessageList channelID={activeChannel.id} currentUserId={currentUser.id} />
+      <MessageList channelID={activeChannel.id} />
 
-      {/* Indicador "escribiendo…" (condicional) */}
-      {isTyping && (
+      {/* Indicador "agente pensando" — se muestra mientras el agente envía tokens */}
+      {isStreaming && (
         <div className="px-4 py-1.5 bg-slate-800/60">
-          <p className="text-xs italic text-slate-400">
-            {currentUser.name} está escribiendo…
+          <p className="text-xs italic text-blue-400 animate-pulse">
+            Agente pensando…
           </p>
         </div>
       )}
 
-      {/* Input de mensajes — sticky bottom */}
+      {/* Input de mensajes — sticky bottom, deshabilitado mientras el agente responde */}
       <ChatInput
         channelID={activeChannel.id}
         onSendMessage={handleSendMessage}
+        disabled={isStreaming}
       />
     </div>
   );
