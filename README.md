@@ -1,14 +1,14 @@
-# 💬 Chat Web App
+# 💬 Deep Agent — AI Chat Web App
 
-Una aplicación web de chat en tiempo real con interfaz de **barra lateral + ventanas de chat**, construida con **React 19**, **TypeScript**, **Vite 6** y **TailwindCSS 3.4**.
+Una aplicación web de chat en tiempo real con agentes IA impulsados por **Deep Agents**, backend **FastAPI + Python 3.12** y frontend **React 19 + Vite 6 + TypeScript**.
 
 ---
 
 ## 📋 Tabla de Contenidos
 
-- [🛠️ Tech Stack](#-tech-stack)
+- [🛠️ Tech Stack](#️-tech-stack)
 - [✨ Características](#-características)
-- [📁 Estructura del Proyecto](#-estructura-del-proyecto)
+- [📁 Estructura del Repositorio](#-estructura-del-repositorio)
 - [🚀 Guía de Inicio](#-guía-de-inicio)
 - [🐳 Docker](#-docker)
 - [🏗️ Arquitectura](#️-arquitectura)
@@ -19,90 +19,161 @@ Una aplicación web de chat en tiempo real con interfaz de **barra lateral + ven
 
 ## 🛠️ Tech Stack
 
+### Backend
+
+| Tecnología      | Versión    | Propósito                              |
+|----- -----------|----- ----  |---- -----------------------------------|
+| **Python**      | 3.12      | Lenguaje principal                     |
+| **FastAPI**     | latest    | Framework web y API REST               |
+| **Deep Agents** | latest    | Framework de agentes IA                |
+| **LangChain**   | latest    | Tool integration y agent orchestration |
+| **Pydantic**    | 2.x       | Validación de schemas                  |
+| **Uvicorn**     | latest    | ASGI server                            |
+
+### Frontend
+
 | Tecnología     | Versión  | Propósito                          |
-|----------------|----------|-------------------------------------|
-| **React**      | 19.x     | Biblioteca UI principal             |
-| **TypeScript** | 5.x      | Tipado estático                     |
-| **Vite**       | 6.x      | Empaquetador y dev server           |
-| **TailwindCSS**| 3.4.x    | Framework CSS utilitario            |
-| **PostCSS**    | —        | Procesamiento de estilos            |
-| **Docker**     | latest   | Contenedores para desarrollo/prod   |
-| **Node.js**    | 20.x     | Vite preview server en producción   |
+|----- ---------  |----- ----|---- -------------------------------|
+| **React**      | 19.x     | Biblioteca UI principal            |
+| **TypeScript** | 5.x      | Tipado estático                    |
+| **Vite**       | 6.x      | Empaquetador y dev server          |
+| **TailwindCSS**| 3.4.x    | Framework CSS utilitario           |
+| **PostCSS**    | —        | Procesamiento de estilos           |
+
+### Infraestructura
+
+| Tecnología     | Propósito                           |
+|----- --------   |---- --------------------------------|
+| **Docker**     | Contenedores para desarrollo/prod   |
+| **Docker Compose** | Orquestación de servicios      |
+| **Node.js**    | 20.x — Vite preview server en prod  |
 
 ---
 
 ## ✨ Características
 
+### Backend
+- 🤖 **Agentes IA** con Deep Agents y LangChain
+- 🔌 **WebSocket** para comunicación en tiempo real
+- 🔒 **Autenticación JWT** en WebSocket y endpoints REST
+- 🧠 **Memoria persistente** con MemorySaver checkpointer
+- 📡 **Agent Pool** — gestión de agentes por thread_id
+- 🔧 **Tool calling** streaming al cliente en tiempo real
+
+### Frontend
 - 💬 **Chat en tiempo real** con mensajería instantánea
 - 📱 **Diseño responsive** — sidebar + chat window adaptables a móvil
 - 🌙 **Modo oscuro** con paleta de colores slate + blue
 - 🚀 **Rendimiento optimizado** con React.lazy y code splitting
 - 🔒 **Tipado estricto** con TypeScript (`strict: true`)
-- 🧩 **Context API** para gestión de estado global (sin Redux)
-- 🐳 **Multi-stage Docker build** para imágenes minimalistas
-- 🛡️ **Acceso seguro a índices** con `noUncheckedIndexedAccess`
-- ✍️ **Textarea auto-resizable** con soporte de atajos (Enter / Shift+Enter)
+- 🧩 **Context API** para gestión de estado global
+- ✍️ **Textarea auto-resizable** con Enter / Shift+Enter
 - 🎭 **Avatares con fallback** de iniciales + indicador de estado
 
 ---
 
-## 📁 Estructura del Proyecto
+## 📁 Estructura del Repositorio
 
 ```
-the_frontend/
+deepagent/
+├── AGENTS.md                         # Instrucciones para agentes IA
+├── docker-compose.yml                # Orquestación: backend + frontend
+├── skills-lock.json                  # Lock file de skills (gitignored)
 ├── docs/
+│   ├── PROJECT_STRUCTURE.md          # Estructura detallada del proyecto
 │   ├── PROJECT_STATE.md
 │   ├── REQUIREMENTS.md
 │   └── FRAMEWORKS.md
-├── public/
-│   └── favicon.ico
-├── src/
-│   ├── assets/
-│   │   └── images/
-│   ├── components/
-│   │   ├── Sidebar/
-│   │   │   ├── Sidebar.tsx
-│   │   │   ├── ChatChannelListItem.tsx
-│   │   │   └── SidebarHeader.tsx
-│   │   ├── ChatWindow/
-│   │   │   ├── ChatWindow.tsx
-│   │   │   ├── MessageList.tsx
-│   │   │   ├── MessageBubble.tsx
-│   │   │   └── ChatInput.tsx
-│   │   ├── Layout/
-│   │   │   └── MainLayout.tsx
-│   │   └── ui/
-│   │       ├── Button.tsx
-│   │       ├── Avatar.tsx
-│   │       └── Input.tsx
-│   ├── context/
-│   │   ├── ChatContext.tsx
-│   │   └── index.ts
-│   ├── hooks/
-│   │   ├── useChatMessages.ts
-│   │   ├── useChatNavigation.ts
-│   │   └── index.ts
-│   ├── types/
-│   │   ├── chat.ts
-│   │   ├── user.ts
-│   │   └── index.ts
-│   ├── utils/
-│   │   └── constants.ts
-│   ├── App.tsx
-│   ├── App.css
-│   ├── index.css
-│   └── main.tsx
-├── Dockerfile
-├── docker-compose.yml
-├── tailwind.config.ts
-├── postcss.config.js
-├── vite.config.ts
-├── tsconfig.json
-├── tsconfig.node.json
-├── .env.example
-├── .gitignore
-├── package.json
-└── README.md
+│
+├── deep-agent-backend/               # FastAPI + DeepAgent (Python 3.12)
+│   ├── Dockerfile
+│   ├── pyproject.toml
+│   ├── .env.example
+│   ├── deep_agents_config.json       # Config de agentes, sub-agentes, MCP
+│   ├── test_deepagents_fix.py        # Test standalone en root
+│   │
+│   ├── app/
+│   │   ├── __init__.py
+│   │   ├── main.py                   # FastAPI app: routers, lifespan, CORS, WS
+│   │   ├── config.py                 # Settings desde .env (JWT, model, etc.)
+│   │   │
+│   │   ├── auth/
+│   │   │   ├── __init__.py
+│   │   │   └── jwt.py               # verify_token(), create_token()
+│   │   │
+│   │   ├── api/
+│   │   │   ├── __init__.py
+│   │   │   ├── ws.py                # WebSocket /ws/{thread_id}
+│   │   │   ├── auth.py              # POST /auth/token, GET /auth/verify
+│   │   │   └── conversations.py     # GET/DELETE /conversations/{thread_id}
+│   │   │
+│   │   ├── agent/
+│   │   │   ├── __init__.py
+│   │   │   ├── deep_agent.py        # DeepAgent configuration and setup
+│   │   │   └── manager.py           # AgentPool: create/get/remove/invoke
+│   │   │
+│   │   └── models/
+│   │       ├── __init__.py
+│   │       └── schemas.py           # Pydantic schemas para API/WS
+│   │
+│   └── tests/
+│       ├── __init__.py
+│       ├── conftest.py              # Fixtures: test client, mock JWT
+│       ├── test_auth.py
+│       ├── test_websocket.py
+│       └── test_conversations.py
+│
+└── deepagent-frontend/              # React 19 + Vite 6 + TypeScript
+    ├── Dockerfile                   # Multi-stage: build + vite preview
+    ├── docker-compose.yml
+    ├── package.json
+    ├── vite.config.ts               # React plugin, @ alias → src/
+    ├── tsconfig.json                # strict: true, noUncheckedIndexedAccess
+    ├── tsconfig.node.json
+    ├── tailwind.config.ts           # Tema slate + blue, Inter font
+    ├── postcss.config.js
+    ├── index.html
+    ├── .env.example
+    │
+    ├── public/
+    │   └── favicon.ico
+    │
+    └── src/
+        ├── assets/
+        │   └── images/
+        ├── components/
+        │   ├── Sidebar/
+        │   │   ├── Sidebar.tsx
+        │   │   ├── ChatChannelListItem.tsx
+        │   │   └── SidebarHeader.tsx
+        │   ├── ChatWindow/
+        │   │   ├── ChatWindow.tsx
+        │   │   ├── MessageList.tsx
+        │   │   ├── MessageBubble.tsx
+        │   │   └── ChatInput.tsx
+        │   ├── Layout/
+        │   │   └── MainLayout.tsx
+        │   └── ui/
+        │       ├── Button.tsx
+        │       ├── Avatar.tsx
+        │       └── Input.tsx
+        ├── context/
+        │   ├── ChatContext.tsx       # Estado global: channels, messages, user
+        │   └── index.ts
+        ├── hooks/
+        │   ├── useChatMessages.ts    # Auto-scroll, filtrado por canal
+        │   ├── useChatNavigation.ts  # Navegación entre canales
+        │   └── index.ts
+        ├── types/
+        │   ├── chat.ts              # Message, ChatChannel
+        │   ├── user.ts              # User, AuthUser
+        │   └── index.ts
+        ├── utils/
+        │   └── constants.ts         # Canales default, tema, pagination
+        ├── App.tsx
+        ├── App.css
+        ├── index.css
+        └── main.tsx
 ```
 
 ---
@@ -112,126 +183,144 @@ the_frontend/
 ### 1. Clonar el repositorio
 
 ```bash
-git clone https://github.com/tu-usuario/chat-web-app.git
-cd chat-web-app
+git clone https://github.com/tu-usuario/deepagent.git
+cd deepagent
 ```
 
-### 2. Instalar dependencias
+### 2. Backend
 
 ```bash
-npm install
+cd deep-agent-backend
+pip install -e ".[dev]"
+cp .env.example .env   # Configurar JWT_SECRET (min 32 chars) + OPENAI_API_KEY
 ```
 
-### 3. Configurar variables de entorno (opcional)
+**Ejecutar:**
+```bash
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8003
+```
+
+**Tests:**
+```bash
+pytest
+```
+
+### 3. Frontend
 
 ```bash
-cp .env.example .env
+cd deepagent-frontend
+npm ci
 ```
 
-### 4. Iniciar el servidor de desarrollo
-
+**Ejecutar:**
 ```bash
-npm run dev
+npm run dev    # Vite dev server en puerto 3000
 ```
 
-> La aplicación se ejecutará en [http://localhost:3000](http://localhost:3000) con **Hot Module Replacement (HMR)** activado.
-
-### 5. Compilar para producción
-
+**Build y verificación:**
 ```bash
-npm run build
+npm run build      # tsc -b && vite build
+npm run typecheck  # tsc --noEmit
+npm run lint       # eslint .
+npm run preview    # servir dist/ localmente
 ```
-
-Esto generará una carpeta `dist/` con la app optimizada y minificada.
-
-### 6. Previsualizar la versión de producción
-
-```bash
-npm run preview
-```
-
-> Sirve la carpeta `dist/` localmente para verificar el build antes de desplegar.
 
 ---
 
 ## 🐳 Docker
 
-### Construir con Dockerfile
+### Desde la raíz del repositorio
 
 ```bash
-# Construir la imagen de producción
-docker build -t chat-web-app .
-
-# Ejecutar el contenedor
-docker run -p 8080:80 chat-web-app
+docker compose up -d       # backend (8003) + frontend preview (8082)
+docker compose down        # detener servicios
+docker compose down -v     # detener + eliminar volúmenes
 ```
 
-> La aplicación estará disponible en [http://localhost:8080](http://localhost:8080).
+**Puertos:**
 
-### Usar Docker Compose (recomendado)
+| Servicio  | Puerto host | Descripción                     |
+|----- ----- |---- ------- |---- ----------------------------|
+| Backend   | 8003       | FastAPI + WebSocket             |
+| Frontend  | 8082       | Vite preview server             |
 
-```bash
-# Levantar la aplicación completa
-docker compose up -d
+> **Nota:** Docker Compose usa `network_mode: host` — el backend se une directamente a la red del host.
 
-# Detener la aplicación
-docker compose down
+### Build de producción
 
-# Detener y eliminar volúmenes
-docker compose down -v
-```
+**Frontend** — Multi-stage Dockerfile:
+1. **Stage 1** (`node:20-alpine AS builder`): instala deps y ejecuta `npm run build`
+2. **Stage 2** (`node:20-alpine AS runner`): copia `dist/` y ejecuta `vite preview` en puerto 4173
 
-**Configuración del servicio:**
-
-| Propiedad        | Valor          |
-|------------------|----------------|
-| Servicio         | `chat-app`     |
-| Puerto expuesto  | `8080:80`      |
-| Imagen base      | `node:20-alpine` (builder) → `node:20-alpine` (prod, vite preview) |
-
-El `Dockerfile` utiliza **multi-stage build**:
-
-1. **Stage 1** (`builder`): `node:20-alpine` — instala dependencias y corre `npm run build`
-2. **Stage 2** (`runtime`): `node:20-alpine` — ejecuta `vite preview --host 0.0.0.0 --port 8082`
+**Backend** — Dockerfile con Python 3.12 slim:
+- Instala dependencias desde `pyproject.toml`
+- Ejecuta Uvicorn con el app FastAPI
 
 ---
 
 ## 🏗️ Arquitectura
 
-### Patrones utilizados
+### Backend — Flujos principales
+
+#### Autenticación
+1. `POST /auth/token` con `{"user_id": "..."}` → retorna JWT
+2. WebSocket conecta con `ws://host/ws/{thread_id}?token=<jwt>` → JWT validado en connect
+3. `GET /auth/verify` con `Authorization: Bearer <token>` → claims o 401
+
+#### WebSocket Bridge (`/ws/{thread_id}`)
+```
+Client (JSON)                    Bridge                    DeepAgent
+  |  {"type":"message","content":"..."}  |
+  |  ------–----------------––--------->|  invoke agent (con config + thread_id)
+  |                                     |
+  |                                     |  ← result["messages"][-1].content
+  |  {"type":"token","content":"..."} <--|
+  |  <------–------–------–-----------|--|
+  |                                     |
+  |  {"type":"tool_call","name":"...",  |  ← agent called a tool
+  |   "args":"..."}                     |
+  |  <------–------–------–-----------|--|
+  |                                     |
+  |  {"type":"done","content":"final"} <-|  ← agent finished
+  |  <------–------–------–-----------|--|
+  |  close connection                   |
+```
+
+#### Agent Pool
+- `AgentPool` gestiona un dict in-memory: `thread_id → (agent_instance, config)`
+- `create_agent(thread_id)` construye un DeepAgent con MemorySaver checkpointer
+- `GET /conversations/{thread_id}` — metadata del thread activo
+- `DELETE /conversations/{thread_id}` — cleanup de agent + estado
+
+### Frontend — Patrones
 
 | Patrón                    | Ubicación              | Descripción                                      |
-|---------------------------|------------------------|--------------------------------------------------|
-| **Context API**           | `src/context/`         | Estado global de canales, mensajes y usuario     |
-| **Custom Hooks**          | `src/hooks/`           | Lógica reutilizable (mensajes, navegación)       |
+|----- -- -------- -------- |---- ---------- --------|---- ---------------------------------------------|
+| **Context API**           | `src/context/`         | Estado global de canales, mensajes y usuario      |
+| **Custom Hooks**          | `src/hooks/`           | Lógica reutilizable (mensajes, navegación)        |
 | **Componentes modulares** | `src/components/`      | UI desacoplada y reutilizable                     |
 | **Tipos centralizados**   | `src/types/`           | Definiciones TypeScript re-exportadas             |
 | **Alias de imports**      | `@/*` → `src/*`        | Rutas limpias en todo el código                   |
 
 ### Gestión de Estado — ChatContext
 
-La aplicación utiliza **React Context API** para la gestión de estado global, evitando la sobrecarga de librerías externas como Redux:
-
-- **`ChatProvider`**: Proveedor que envuelve la aplicación y expone el estado
-- **`useChatContext()`**: Hook personalizado con validación para acceder al contexto
-- **Estado principal**:
-  - `channels` — Lista de canales de chat
-  - `activeChannel` — Canal seleccionado actualmente
-  - `messages` — Mensajes del canal activo
-  - `currentUser` — Usuario autenticado
+- **`ChatProvider`**: Proveedor que envuelve la aplicación
+- **`useChatContext()`**: Hook con validación de error
+- **Estado**: `channels`, `activeChannel`, `messages`, `currentUser`
 - **Acciones**: `setActiveChannel`, `sendMessage`, `addChannel`, `removeChannel`
 
-```tsx
-import { ChatProvider, useChatContext } from "./context";
+### Dependencias entre archivos
 
-// En App.tsx
-<ChatProvider>
-  <App />
-</ChatProvider>
-
-// En cualquier componente hijo
-const { activeChannel, sendMessage } = useChatContext();
-```
+| Archivo               | Depende de                                  | Usado por            |
+|-----                 |---- -------                                 |---- -----------------|
+| `main.py`            | auth.jwt, api/*, agent.manager, models       | Dockerfile, pyproject |
+| `api/ws.py`          | auth.jwt, agent.manager, models.schemas     | main.py              |
+| `api/auth.py`        | auth.jwt, models.schemas                    | main.py              |
+| `api/conversations.py`| agent.manager, models.schemas               | main.py              |
+| `agent/manager.py`   | LangChain, config                           | ws bridge            |
+| `auth/jwt.py`        | config                                      | api/ws.py, api/auth  |
+| `config.py`          | variables `.env`                            | todos los módulos    |
+| `models/schemas.py`  | Pydantic                                    | todos los endpoints  |
 
 ---
 
@@ -240,29 +329,27 @@ const { activeChannel, sendMessage } = useChatContext();
 ### Layout General
 
 ```
-┌─────────────────────────────────────────────────────┐
-│  🗂️ Sidebar                    │  💬 Ventana Chat  │
-│                             │                      │
-│  ┌──────────────────────┐   │  ┌────────────────┐  │
-│  │   Crear Nuevo Canal  │   │  │ # nombre-canal │  │
-│  ├──────────────────────┤   │  ├────────────────┤  │
-│  │ 👤 Canal General     │   │  │                │  │
-│  │ 👥 Canal Design      │   │  │ Mensajes...    │  │
-│  │ 👥 Canal Random      │   │  │                │  │
-│  │                      │   │  │ [input...]  ➤  │  │
-│  ├──────────────────────┤   │  └────────────────┘  │
-│  │  Avatar | Estado     │   │                      │
-│  └──────────────────────┘   │                      │
-└─────────────────────────────────────────────────────┘
+┌───────────────┬──────────────────────────────────┐
+│  🗂️ Sidebar   │  💬 Ventana Chat                  │
+│               │                                  │
+│ Crear Canal   │  ┌────────────────────────────┐  │
+│ ├─────────────┤│  │ # nombre-canal           │  │
+│ 👤 General    ││  ├──────────────────────────┤  │
+│ 👥 Design     ││  │                          │  │
+│ 👥 Random     ││  │  Mensajes...             │  │
+│               ││  │                          │  │
+│               ││  │  [input...]       ➤     │  │
+│ Avatar │ 🟢  ││  └──────────────────────────┘  │
+└───────────────┴──────────────────────────────────┘
 ```
 
 ### Componentes principales
 
-- **Sidebar** — Lista de canales con avatares, último mensaje y badge de mensajes no leídos
-- **ChatWindow** — Layout principal con lista de mensajes desplazable e input fijo
-- **MessageBubble** — Burbujas de mensaje con avatar, nombre, timestamp y estilo condicional
-- **ChatInput** — Textarea auto-ajustable con soporte de envío con Enter
-- **MainLayout** — Contenedor flexible que posiciona sidebar y chat; responsive con menú hamburguesa en móvil
+- **Sidebar** — Lista de canales con avatares, último mensaje y badge de no leídos
+- **ChatWindow** — Layout con lista de mensajes scrollable + input fijo
+- **MessageBubble** — Burbujas con avatar, nombre, timestamp y estilo condicional
+- **ChatInput** — Textarea auto-resizable con Enter para enviar, Shift+Enter nueva línea
+- **MainLayout** — Contenedor flexible; responsive con menú hamburguesa en móvil
 
 ### Temas visuales
 
@@ -274,16 +361,24 @@ const { activeChannel, sendMessage } = useChatContext();
 
 ## ⚙️ Scripts de Desarrollo
 
-| Comando           | Descripción                              |
-|-------------------|------------------------------------------|
-| `npm run dev`     | Inicia servidor de desarrollo (HMR)      |
-| `npm run build`   | Compila para producción                  |
-| `npm run preview` | Sirve la build de producción localmente  |
-| `npm run lint`    | Ejecuta ESLint                           |
-| `npm run typecheck` | Verifica tipado con TypeScript         |
+### Backend
+
+| Comando                        | Descripción                           |
+|----- -------------------------  |---- ----------------------------------|
+| `pip install -e ".[dev]"`      | Instalar deps + dev extras            |
+| `uvicorn app.main:app --reload`| Servidor FastAPI en puerto 8003       |
+| `pytest`                       | Ejecutar tests                        |
+
+### Frontend
+
+| Comando             | Descripción                              |
+|----- ---------------|---- --------------------------------------|
+| `npm run dev`       | Servidor Vite con HMR (puerto 3000)       |
+| `npm run build`     | Compila para producción (tsc + vite)      |
+| `npm run preview`   | Sirve la build de producción localmente   |
+| `npm run lint`      | Ejecuta ESLint                            |
+| `npm run typecheck` | Verifica tipado con TypeScript            |
 
 ---
 
-> **Repositorio**: [github.com/tu-usuario/chat-web-app](https://github.com/tu-usuario/chat-web-app)
->
 > **Licencia**: MIT
