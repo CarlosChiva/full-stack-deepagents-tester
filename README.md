@@ -381,4 +381,3 @@ Client (JSON)                    Bridge                    DeepAgent
 
 ---
 
-> **Licencia**: MIT
